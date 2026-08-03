@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedAnalysesRouteImport } from './routes/_authenticated/analyses'
 import { Route as AuthenticatedAnalysesIndexRouteImport } from './routes/_authenticated/analyses.index'
+import { Route as AuthenticatedAnalysesAnalysisIdRouteImport } from './routes/_authenticated/analyses.$analysisId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -40,16 +41,24 @@ const AuthenticatedAnalysesIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedAnalysesRoute,
   } as any)
+const AuthenticatedAnalysesAnalysisIdRoute =
+  AuthenticatedAnalysesAnalysisIdRouteImport.update({
+    id: '/$analysisId',
+    path: '/$analysisId',
+    getParentRoute: () => AuthenticatedAnalysesRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/analyses': typeof AuthenticatedAnalysesRouteWithChildren
+  '/analyses/$analysisId': typeof AuthenticatedAnalysesAnalysisIdRoute
   '/analyses/': typeof AuthenticatedAnalysesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/analyses/$analysisId': typeof AuthenticatedAnalysesAnalysisIdRoute
   '/analyses': typeof AuthenticatedAnalysesIndexRoute
 }
 export interface FileRoutesById {
@@ -58,19 +67,22 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/_authenticated/analyses': typeof AuthenticatedAnalysesRouteWithChildren
+  '/_authenticated/analyses/$analysisId': typeof AuthenticatedAnalysesAnalysisIdRoute
   '/_authenticated/analyses/': typeof AuthenticatedAnalysesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/analyses' | '/analyses/'
+  fullPaths:
+    '/' | '/auth' | '/analyses' | '/analyses/$analysisId' | '/analyses/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/analyses'
+  to: '/' | '/auth' | '/analyses/$analysisId' | '/analyses'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
     | '/_authenticated/analyses'
+    | '/_authenticated/analyses/$analysisId'
     | '/_authenticated/analyses/'
   fileRoutesById: FileRoutesById
 }
@@ -117,14 +129,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAnalysesIndexRouteImport
       parentRoute: typeof AuthenticatedAnalysesRoute
     }
+    '/_authenticated/analyses/$analysisId': {
+      id: '/_authenticated/analyses/$analysisId'
+      path: '/$analysisId'
+      fullPath: '/analyses/$analysisId'
+      preLoaderRoute: typeof AuthenticatedAnalysesAnalysisIdRouteImport
+      parentRoute: typeof AuthenticatedAnalysesRoute
+    }
   }
 }
 
 interface AuthenticatedAnalysesRouteChildren {
+  AuthenticatedAnalysesAnalysisIdRoute: typeof AuthenticatedAnalysesAnalysisIdRoute
   AuthenticatedAnalysesIndexRoute: typeof AuthenticatedAnalysesIndexRoute
 }
 
 const AuthenticatedAnalysesRouteChildren: AuthenticatedAnalysesRouteChildren = {
+  AuthenticatedAnalysesAnalysisIdRoute: AuthenticatedAnalysesAnalysisIdRoute,
   AuthenticatedAnalysesIndexRoute: AuthenticatedAnalysesIndexRoute,
 }
 
