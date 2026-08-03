@@ -10,33 +10,86 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedAnalysesRouteImport } from './routes/_authenticated/analyses'
+import { Route as AuthenticatedAnalysesIndexRouteImport } from './routes/_authenticated/analyses.index'
+import { Route as AuthenticatedAnalysesAnalysisIdRouteImport } from './routes/_authenticated/analyses.$analysisId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAnalysesRoute = AuthenticatedAnalysesRouteImport.update({
+  id: '/analyses',
+  path: '/analyses',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAnalysesIndexRoute =
+  AuthenticatedAnalysesIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedAnalysesRoute,
+  } as any)
+const AuthenticatedAnalysesAnalysisIdRoute =
+  AuthenticatedAnalysesAnalysisIdRouteImport.update({
+    id: '/$analysisId',
+    path: '/$analysisId',
+    getParentRoute: () => AuthenticatedAnalysesRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/analyses': typeof AuthenticatedAnalysesRouteWithChildren
+  '/analyses/$analysisId': typeof AuthenticatedAnalysesAnalysisIdRoute
+  '/analyses/': typeof AuthenticatedAnalysesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/analyses/$analysisId': typeof AuthenticatedAnalysesAnalysisIdRoute
+  '/analyses': typeof AuthenticatedAnalysesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/_authenticated/analyses': typeof AuthenticatedAnalysesRouteWithChildren
+  '/_authenticated/analyses/$analysisId': typeof AuthenticatedAnalysesAnalysisIdRoute
+  '/_authenticated/analyses/': typeof AuthenticatedAnalysesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    '/' | '/auth' | '/analyses' | '/analyses/$analysisId' | '/analyses/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/auth' | '/analyses/$analysisId' | '/analyses'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/_authenticated/analyses'
+    | '/_authenticated/analyses/$analysisId'
+    | '/_authenticated/analyses/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,22 +101,75 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/analyses': {
+      id: '/_authenticated/analyses'
+      path: '/analyses'
+      fullPath: '/analyses'
+      preLoaderRoute: typeof AuthenticatedAnalysesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/analyses/': {
+      id: '/_authenticated/analyses/'
+      path: '/'
+      fullPath: '/analyses/'
+      preLoaderRoute: typeof AuthenticatedAnalysesIndexRouteImport
+      parentRoute: typeof AuthenticatedAnalysesRoute
+    }
+    '/_authenticated/analyses/$analysisId': {
+      id: '/_authenticated/analyses/$analysisId'
+      path: '/$analysisId'
+      fullPath: '/analyses/$analysisId'
+      preLoaderRoute: typeof AuthenticatedAnalysesAnalysisIdRouteImport
+      parentRoute: typeof AuthenticatedAnalysesRoute
+    }
   }
 }
 
+interface AuthenticatedAnalysesRouteChildren {
+  AuthenticatedAnalysesAnalysisIdRoute: typeof AuthenticatedAnalysesAnalysisIdRoute
+  AuthenticatedAnalysesIndexRoute: typeof AuthenticatedAnalysesIndexRoute
+}
+
+const AuthenticatedAnalysesRouteChildren: AuthenticatedAnalysesRouteChildren = {
+  AuthenticatedAnalysesAnalysisIdRoute: AuthenticatedAnalysesAnalysisIdRoute,
+  AuthenticatedAnalysesIndexRoute: AuthenticatedAnalysesIndexRoute,
+}
+
+const AuthenticatedAnalysesRouteWithChildren =
+  AuthenticatedAnalysesRoute._addFileChildren(
+    AuthenticatedAnalysesRouteChildren,
+  )
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAnalysesRoute: typeof AuthenticatedAnalysesRouteWithChildren
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAnalysesRoute: AuthenticatedAnalysesRouteWithChildren,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
