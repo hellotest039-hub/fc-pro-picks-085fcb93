@@ -14,7 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      analyses: {
+        Row: {
+          away_team: string
+          competition: string
+          created_at: string
+          home_team: string
+          id: string
+          input: Json
+          report: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          away_team: string
+          competition: string
+          created_at?: string
+          home_team: string
+          id?: string
+          input?: Json
+          report?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          away_team?: string
+          competition?: string
+          created_at?: string
+          home_team?: string
+          id?: string
+          input?: Json
+          report?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
