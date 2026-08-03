@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedAnalysesRouteImport } from './routes/_authenticated/analyses'
+import { Route as AuthenticatedAnalysesIndexRouteImport } from './routes/_authenticated/analyses.index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -33,31 +34,44 @@ const AuthenticatedAnalysesRoute = AuthenticatedAnalysesRouteImport.update({
   path: '/analyses',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedAnalysesIndexRoute =
+  AuthenticatedAnalysesIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedAnalysesRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/analyses': typeof AuthenticatedAnalysesRoute
+  '/analyses': typeof AuthenticatedAnalysesRouteWithChildren
+  '/analyses/': typeof AuthenticatedAnalysesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/analyses': typeof AuthenticatedAnalysesRoute
+  '/analyses': typeof AuthenticatedAnalysesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
-  '/_authenticated/analyses': typeof AuthenticatedAnalysesRoute
+  '/_authenticated/analyses': typeof AuthenticatedAnalysesRouteWithChildren
+  '/_authenticated/analyses/': typeof AuthenticatedAnalysesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/analyses'
+  fullPaths: '/' | '/auth' | '/analyses' | '/analyses/'
   fileRoutesByTo: FileRoutesByTo
   to: '/' | '/auth' | '/analyses'
   id:
-    '__root__' | '/' | '/_authenticated' | '/auth' | '/_authenticated/analyses'
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/_authenticated/analyses'
+    | '/_authenticated/analyses/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -96,15 +110,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAnalysesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/analyses/': {
+      id: '/_authenticated/analyses/'
+      path: '/'
+      fullPath: '/analyses/'
+      preLoaderRoute: typeof AuthenticatedAnalysesIndexRouteImport
+      parentRoute: typeof AuthenticatedAnalysesRoute
+    }
   }
 }
 
+interface AuthenticatedAnalysesRouteChildren {
+  AuthenticatedAnalysesIndexRoute: typeof AuthenticatedAnalysesIndexRoute
+}
+
+const AuthenticatedAnalysesRouteChildren: AuthenticatedAnalysesRouteChildren = {
+  AuthenticatedAnalysesIndexRoute: AuthenticatedAnalysesIndexRoute,
+}
+
+const AuthenticatedAnalysesRouteWithChildren =
+  AuthenticatedAnalysesRoute._addFileChildren(
+    AuthenticatedAnalysesRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedAnalysesRoute: typeof AuthenticatedAnalysesRoute
+  AuthenticatedAnalysesRoute: typeof AuthenticatedAnalysesRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedAnalysesRoute: AuthenticatedAnalysesRoute,
+  AuthenticatedAnalysesRoute: AuthenticatedAnalysesRouteWithChildren,
 }
 
 const AuthenticatedRouteRouteWithChildren =
