@@ -15,16 +15,28 @@ const inputSchema = z.object({
   notes: z.string().max(1000).default(""),
 });
 
+const resultSchema = z.object({
+  id: z.string().uuid(),
+  actualHtHomeGoals: z.number().int().min(0).max(99).nullable(),
+  actualHtAwayGoals: z.number().int().min(0).max(99).nullable(),
+  actualHomeGoals: z.number().int().min(0).max(99).nullable(),
+  actualAwayGoals: z.number().int().min(0).max(99).nullable(),
+  resultNotes: z.string().max(1000).default(""),
+});
+
 export const listAnalyses = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { data, error } = await context.supabase
       .from("analyses")
-      .select("id, competition, home_team, away_team, created_at")
+      .select(
+        "id, competition, home_team, away_team, created_at, actual_home_goals, actual_away_goals, result_recorded_at",
+      )
       .order("created_at", { ascending: false });
     if (error) throw new Error(error.message);
     return data ?? [];
   });
+
 
 export const getAnalysis = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
