@@ -57,7 +57,19 @@ export const createAnalysis = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => inputSchema.parse(data))
   .handler(async ({ data, context }) => {
     const { generateReport } = await import("./prediction.server");
-    const report = await generateReport(data);
+
+    const { data: settled } = await context.supabase
+      .from("analyses")
+      .select(
+        "competition, home_team, away_team, input, actual_ht_home_goals, actual_ht_away_goals, actual_home_goals, actual_away_goals, result_notes",
+      )
+      .eq("competition", data.competition)
+      .not("result_recorded_at", "is", null)
+      .order("result_recorded_at", { ascending: false })
+      .limit(12);
+
+    const report = await generateReport(data, settled ?? []);
+
 
     const { data: row, error } = await context.supabase
       .from("analyses")
