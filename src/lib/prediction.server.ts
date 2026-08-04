@@ -137,7 +137,7 @@ export async function generateReport(
       model: "google/gemini-3.5-flash",
       messages: [
         { role: "system", content: SYSTEM_PROMPT },
-        { role: "user", content: buildUserPrompt(input) },
+        { role: "user", content: buildUserPrompt(input) + buildHistoryPrompt(history) },
       ],
     }),
   });
