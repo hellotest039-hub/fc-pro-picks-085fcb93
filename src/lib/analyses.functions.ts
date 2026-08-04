@@ -2,11 +2,6 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-const h2hSchema = z.object({
-  homeGoals: z.number().int().nullable(),
-  awayGoals: z.number().int().nullable(),
-});
-
 const inputSchema = z.object({
   competition: z.string().trim().min(1).max(120),
   homeTeam: z.string().trim().min(1).max(80),
@@ -17,7 +12,6 @@ const inputSchema = z.object({
   awayMatches: z.number().int().nullable(),
   awayGoalsFor: z.number().int().nullable(),
   awayGoalsAgainst: z.number().int().nullable(),
-  h2h: z.array(h2hSchema).max(5),
   notes: z.string().max(1000).default(""),
 });
 

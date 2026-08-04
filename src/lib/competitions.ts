@@ -17,11 +17,6 @@ export const COMPETITIONS = [
   "Penalty (variante 2)",
 ] as const;
 
-export type H2HRow = {
-  homeGoals: number | null;
-  awayGoals: number | null;
-};
-
 export type AnalysisInput = {
   competition: string;
   homeTeam: string;
@@ -32,7 +27,6 @@ export type AnalysisInput = {
   awayMatches: number | null;
   awayGoalsFor: number | null;
   awayGoalsAgainst: number | null;
-  h2h: H2HRow[];
   notes: string;
 };
 
@@ -46,6 +40,5 @@ export const emptyInput = (): AnalysisInput => ({
   awayMatches: null,
   awayGoalsFor: null,
   awayGoalsAgainst: null,
-  h2h: Array.from({ length: 5 }, () => ({ homeGoals: null, awayGoals: null })),
   notes: "",
 });
