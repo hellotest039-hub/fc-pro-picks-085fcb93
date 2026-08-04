@@ -4,7 +4,9 @@ import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { Copy, Trash2 } from "lucide-react";
 import { ReportView } from "@/components/report-view";
+import { ResultForm } from "@/components/result-form";
 import { deleteAnalysis, getAnalysis } from "@/lib/analyses.functions";
+
 
 export const Route = createFileRoute("/_authenticated/analyses/$analysisId")({
   component: AnalysisDetail,

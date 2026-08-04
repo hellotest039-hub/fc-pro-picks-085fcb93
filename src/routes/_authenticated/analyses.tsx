@@ -88,7 +88,17 @@ function AnalysesLayout() {
                   <span className="block font-medium text-foreground">
                     {item.home_team} vs {item.away_team}
                   </span>
+                  {item.result_recorded_at ? (
+                    <span className="mt-0.5 block text-[0.65rem] font-semibold text-primary">
+                      Résultat : {item.actual_home_goals}-{item.actual_away_goals}
+                    </span>
+                  ) : (
+                    <span className="mt-0.5 block text-[0.65rem] text-gold">
+                      Résultat à renseigner
+                    </span>
+                  )}
                   <span className="mt-0.5 block truncate">{item.competition}</span>
+
                   <span className="mt-0.5 block text-[0.65rem]">
                     {new Date(item.created_at).toLocaleString("fr-FR", {
                       dateStyle: "short",
