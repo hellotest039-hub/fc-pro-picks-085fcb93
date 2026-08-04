@@ -15,16 +15,28 @@ const inputSchema = z.object({
   notes: z.string().max(1000).default(""),
 });
 
+const resultSchema = z.object({
+  id: z.string().uuid(),
+  actualHtHomeGoals: z.number().int().min(0).max(99).nullable(),
+  actualHtAwayGoals: z.number().int().min(0).max(99).nullable(),
+  actualHomeGoals: z.number().int().min(0).max(99).nullable(),
+  actualAwayGoals: z.number().int().min(0).max(99).nullable(),
+  resultNotes: z.string().max(1000).default(""),
+});
+
 export const listAnalyses = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { data, error } = await context.supabase
       .from("analyses")
-      .select("id, competition, home_team, away_team, created_at")
+      .select(
+        "id, competition, home_team, away_team, created_at, actual_home_goals, actual_away_goals, result_recorded_at",
+      )
       .order("created_at", { ascending: false });
     if (error) throw new Error(error.message);
     return data ?? [];
   });
+
 
 export const getAnalysis = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
@@ -45,7 +57,19 @@ export const createAnalysis = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => inputSchema.parse(data))
   .handler(async ({ data, context }) => {
     const { generateReport } = await import("./prediction.server");
-    const report = await generateReport(data);
+
+    const { data: settled } = await context.supabase
+      .from("analyses")
+      .select(
+        "competition, home_team, away_team, input, actual_ht_home_goals, actual_ht_away_goals, actual_home_goals, actual_away_goals, result_notes",
+      )
+      .eq("competition", data.competition)
+      .not("result_recorded_at", "is", null)
+      .order("result_recorded_at", { ascending: false })
+      .limit(12);
+
+    const report = await generateReport(data, settled ?? []);
+
 
     const { data: row, error } = await context.supabase
       .from("analyses")
@@ -70,6 +94,26 @@ export const deleteAnalysis = createServerFn({ method: "POST" })
   .inputValidator((data: { id: string }) => z.object({ id: z.string().uuid() }).parse(data))
   .handler(async ({ data, context }) => {
     const { error } = await context.supabase.from("analyses").delete().eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+export const saveAnalysisResult = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: unknown) => resultSchema.parse(data))
+  .handler(async ({ data, context }) => {
+    const hasScore = data.actualHomeGoals !== null && data.actualAwayGoals !== null;
+    const { error } = await context.supabase
+      .from("analyses")
+      .update({
+        actual_ht_home_goals: data.actualHtHomeGoals,
+        actual_ht_away_goals: data.actualHtAwayGoals,
+        actual_home_goals: data.actualHomeGoals,
+        actual_away_goals: data.actualAwayGoals,
+        result_notes: data.resultNotes.trim() || null,
+        result_recorded_at: hasScore ? new Date().toISOString() : null,
+      })
+      .eq("id", data.id);
     if (error) throw new Error(error.message);
     return { ok: true };
   });

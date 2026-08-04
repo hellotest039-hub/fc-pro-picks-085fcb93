@@ -16,6 +16,10 @@ export type Database = {
     Tables: {
       analyses: {
         Row: {
+          actual_away_goals: number | null
+          actual_home_goals: number | null
+          actual_ht_away_goals: number | null
+          actual_ht_home_goals: number | null
           away_team: string
           competition: string
           created_at: string
@@ -23,11 +27,17 @@ export type Database = {
           id: string
           input: Json
           report: string | null
+          result_notes: string | null
+          result_recorded_at: string | null
           status: string
           updated_at: string
           user_id: string
         }
         Insert: {
+          actual_away_goals?: number | null
+          actual_home_goals?: number | null
+          actual_ht_away_goals?: number | null
+          actual_ht_home_goals?: number | null
           away_team: string
           competition: string
           created_at?: string
@@ -35,11 +45,17 @@ export type Database = {
           id?: string
           input?: Json
           report?: string | null
+          result_notes?: string | null
+          result_recorded_at?: string | null
           status?: string
           updated_at?: string
           user_id: string
         }
         Update: {
+          actual_away_goals?: number | null
+          actual_home_goals?: number | null
+          actual_ht_away_goals?: number | null
+          actual_ht_home_goals?: number | null
           away_team?: string
           competition?: string
           created_at?: string
@@ -47,6 +63,8 @@ export type Database = {
           id?: string
           input?: Json
           report?: string | null
+          result_notes?: string | null
+          result_recorded_at?: string | null
           status?: string
           updated_at?: string
           user_id?: string

@@ -4,7 +4,9 @@ import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { Copy, Trash2 } from "lucide-react";
 import { ReportView } from "@/components/report-view";
+import { ResultForm } from "@/components/result-form";
 import { deleteAnalysis, getAnalysis } from "@/lib/analyses.functions";
+
 
 export const Route = createFileRoute("/_authenticated/analyses/$analysisId")({
   component: AnalysisDetail,
@@ -81,6 +83,23 @@ function AnalysisDetail() {
       <div className="card-elevated p-5">
         <ReportView report={data.report ?? "Rapport indisponible."} />
       </div>
+
+      <ResultForm
+        key={data.id}
+        analysisId={data.id}
+        homeTeam={data.home_team}
+        awayTeam={data.away_team}
+        initial={{
+          actualHtHomeGoals: data.actual_ht_home_goals,
+          actualHtAwayGoals: data.actual_ht_away_goals,
+          actualHomeGoals: data.actual_home_goals,
+          actualAwayGoals: data.actual_away_goals,
+          resultNotes: data.result_notes ?? "",
+          recordedAt: data.result_recorded_at,
+        }}
+      />
+
+
 
       <p className="border-l-2 border-primary/60 pl-4 text-xs leading-relaxed text-muted-foreground">
         Rappel : même une prédiction fiable ne garantit pas un résultat à 100 %. Dose tes mises
