@@ -87,9 +87,45 @@ Aucune donnée de confrontation directe n'est disponible : base-toi uniquement s
 Produis le rapport complet selon le format imposé.`;
 }
 
-export async function generateReport(input: AnalysisInput): Promise<string> {
+export type SettledAnalysis = {
+  competition: string;
+  home_team: string;
+  away_team: string;
+  input: unknown;
+  actual_ht_home_goals: number | null;
+  actual_ht_away_goals: number | null;
+  actual_home_goals: number | null;
+  actual_away_goals: number | null;
+  result_notes: string | null;
+};
+
+function buildHistoryPrompt(history: SettledAnalysis[]): string {
+  if (history.length === 0) return "";
+  const lines = history
+    .map((h) => {
+      const ht =
+        h.actual_ht_home_goals !== null && h.actual_ht_away_goals !== null
+          ? ` (MT ${h.actual_ht_home_goals}-${h.actual_ht_away_goals})`
+          : "";
+      const note = h.result_notes ? ` — ${h.result_notes}` : "";
+      return `- ${h.home_team} ${h.actual_home_goals}-${h.actual_away_goals} ${h.away_team}${ht}${note}`;
+    })
+    .join("\n");
+  return `
+
+RÉSULTATS RÉELS DÉJÀ OBSERVÉS DANS CETTE COMPÉTITION (analyses passées de l'utilisateur, du plus récent au plus ancien) :
+${lines}
+
+Utilise ces résultats pour calibrer ton analyse : niveau de buts réel de la ligue, fréquence du BTTS, écarts typiques, fiabilité des lignes Over/Under. Ne les traite pas comme des confrontations directes et n'invente rien au-delà.`;
+}
+
+export async function generateReport(
+  input: AnalysisInput,
+  history: SettledAnalysis[] = [],
+): Promise<string> {
   const apiKey = process.env["LOVABLE_API_KEY"];
   if (!apiKey) throw new Error("Service d'analyse indisponible (clé manquante).");
+
 
   const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
     method: "POST",
