@@ -97,3 +97,23 @@ export const deleteAnalysis = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+export const saveAnalysisResult = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: unknown) => resultSchema.parse(data))
+  .handler(async ({ data, context }) => {
+    const hasScore = data.actualHomeGoals !== null && data.actualAwayGoals !== null;
+    const { error } = await context.supabase
+      .from("analyses")
+      .update({
+        actual_ht_home_goals: data.actualHtHomeGoals,
+        actual_ht_away_goals: data.actualHtAwayGoals,
+        actual_home_goals: data.actualHomeGoals,
+        actual_away_goals: data.actualAwayGoals,
+        result_notes: data.resultNotes.trim() || null,
+        result_recorded_at: hasScore ? new Date().toISOString() : null,
+      })
+      .eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
