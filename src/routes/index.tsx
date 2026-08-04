@@ -10,11 +10,11 @@ export const Route = createFileRoute("/")({
         content:
           "Analyse statistique des matchs FIFA/FC virtuels : 1X2, BTTS, Over/Under, handicap, score exact, avec niveaux de confiance et protection du bankroll.",
       },
-      { property: "og:title", content: "FIFA Virtual Predictor Pro" },
+      { property: "og:title", content: "FIFA Virtual Predictor Pro — Pronostics FIFA/FC virtuels" },
       {
         property: "og:description",
         content:
-          "Des pronostics FIFA virtuels justifiés par les données, avec niveaux de confiance et discipline de bankroll.",
+          "Analyse statistique des matchs FIFA/FC virtuels : 1X2, BTTS, Over/Under, handicap, score exact, avec niveaux de confiance et protection du bankroll.",
       },
     ],
   }),

@@ -79,14 +79,20 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "FIFA Virtual Predictor Pro" },
+      { title: "FIFA Virtual Predictor Pro — Pronostics FIFA/FC virtuels" },
       {
         name: "description",
         content:
-          "Analyse statistique et pronostics prudents pour les matchs de football virtuel FIFA/FC.",
+          "Analyse statistique des matchs FIFA/FC virtuels : 1X2, BTTS, Over/Under, handicap, score exact, avec niveaux de confiance et protection du bankroll.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:title", content: "FIFA Virtual Predictor Pro — Pronostics FIFA/FC virtuels" },
+      { name: "twitter:title", content: "FIFA Virtual Predictor Pro — Pronostics FIFA/FC virtuels" },
+      { property: "og:description", content: "Analyse statistique des matchs FIFA/FC virtuels : 1X2, BTTS, Over/Under, handicap, score exact, avec niveaux de confiance et protection du bankroll." },
+      { name: "twitter:description", content: "Analyse statistique des matchs FIFA/FC virtuels : 1X2, BTTS, Over/Under, handicap, score exact, avec niveaux de confiance et protection du bankroll." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/17d13e91-564d-4731-b7a0-a7c602456e35/id-preview-12a1c8ee--013356b1-4e9b-45a7-84e2-8eed788b814d.lovable.app-1785829209344.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/17d13e91-564d-4731-b7a0-a7c602456e35/id-preview-12a1c8ee--013356b1-4e9b-45a7-84e2-8eed788b814d.lovable.app-1785829209344.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
