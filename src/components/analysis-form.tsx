@@ -26,13 +26,6 @@ export function AnalysisForm({ initial, submitting, onSubmit }: Props) {
     setForm((prev) => ({ ...prev, [key]: value }));
   }
 
-  function setH2H(index: number, side: "homeGoals" | "awayGoals", value: string) {
-    setForm((prev) => ({
-      ...prev,
-      h2h: prev.h2h.map((row, i) => (i === index ? { ...row, [side]: toNumber(value) } : row)),
-    }));
-  }
-
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     if (!form.homeTeam.trim() || !form.awayTeam.trim()) {
@@ -51,9 +44,6 @@ export function AnalysisForm({ initial, submitting, onSubmit }: Props) {
     form.homeMatches === null || form.awayMatches === null ? "matchs joués" : null,
     form.homeGoalsFor === null || form.awayGoalsFor === null ? "buts marqués" : null,
     form.homeGoalsAgainst === null || form.awayGoalsAgainst === null ? "buts encaissés" : null,
-    form.h2h.some((r) => r.homeGoals === null || r.awayGoals === null)
-      ? "certaines confrontations directes"
-      : null,
   ].filter(Boolean) as string[];
 
   return (
