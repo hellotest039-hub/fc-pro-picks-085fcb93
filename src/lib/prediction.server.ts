@@ -58,14 +58,6 @@ function num(value: number | null | undefined): string {
 }
 
 export function buildUserPrompt(input: AnalysisInput): string {
-  const h2h = input.h2h
-    .map((row, i) => {
-      const label = `${i + 1}. ${input.homeTeam} (dom.) vs ${input.awayTeam} (ext.)`;
-      if (row.homeGoals === null || row.awayGoals === null) return `${label} : NON FOURNI`;
-      return `${label} : ${row.homeGoals} - ${row.awayGoals}`;
-    })
-    .join("\n");
-
   return `Analyse le match suivant.
 
 COMPÉTITION : ${input.competition}
@@ -80,10 +72,9 @@ COMPÉTITION : ${input.competition}
 - Buts marqués (total) : ${num(input.awayGoalsFor)}
 - Buts encaissés (total) : ${num(input.awayGoalsAgainst)}
 
-5 DERNIÈRES CONFRONTATIONS DIRECTES (du plus récent au plus ancien, domicile à gauche) :
-${h2h}
-
 NOTES COMPLÉMENTAIRES : ${input.notes.trim() || "aucune"}
+
+Aucune donnée de confrontation directe n'est disponible : base-toi uniquement sur les moyennes ci-dessus, sans inventer d'historique.
 
 Produis le rapport complet selon le format imposé.`;
 }

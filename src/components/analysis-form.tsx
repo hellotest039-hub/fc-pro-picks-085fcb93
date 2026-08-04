@@ -109,38 +109,8 @@ export function AnalysisForm({ initial, submitting, onSubmit }: Props) {
         </div>
       </section>
 
-      <section className="card-elevated p-5">
-        <h2 className="font-display text-sm uppercase tracking-widest text-primary">
-          3 · 5 dernières confrontations directes
-        </h2>
-        <p className="mt-1 text-xs text-muted-foreground">
-          Du plus récent au plus ancien. L'équipe à domicile reste à gauche.
-        </p>
-        <div className="mt-4 space-y-2">
-          {form.h2h.map((row, index) => (
-            <div key={index} className="flex items-center gap-2">
-              <span className="w-5 text-xs text-muted-foreground">{index + 1}</span>
-              <input
-                type="number"
-                min={0}
-                className="field-base text-center"
-                value={fromNumber(row.homeGoals)}
-                onChange={(e) => setH2H(index, "homeGoals", e.target.value)}
-                aria-label={`Buts domicile confrontation ${index + 1}`}
-              />
-              <span className="text-muted-foreground">−</span>
-              <input
-                type="number"
-                min={0}
-                className="field-base text-center"
-                value={fromNumber(row.awayGoals)}
-                onChange={(e) => setH2H(index, "awayGoals", e.target.value)}
-                aria-label={`Buts extérieur confrontation ${index + 1}`}
-              />
-            </div>
-          ))}
-        </div>
-      </section>
+
+
 
       <section className="card-elevated p-5">
         <h2 className="font-display text-sm uppercase tracking-widest text-primary">
