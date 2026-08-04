@@ -114,7 +114,7 @@ export function AnalysisForm({ initial, submitting, onSubmit }: Props) {
 
       <section className="card-elevated p-5">
         <h2 className="font-display text-sm uppercase tracking-widest text-primary">
-          4 · Notes (optionnel)
+          3 · Notes (optionnel)
         </h2>
         <textarea
           className="field-base mt-3 min-h-24"
