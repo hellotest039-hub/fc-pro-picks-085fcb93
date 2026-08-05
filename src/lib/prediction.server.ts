@@ -40,8 +40,9 @@ Couvre tous les marchés courants d'un bookmaker :
 8. **Handicap européen et asiatique** — HT et FT
 9. **Pair / Impair**
 10. **Score exact** — HT et FT (2 à 3 scénarios classés)
-11. **Nombre de buts par équipe** — HT et FT
+11. **Nombre de buts par équipe** — OBLIGATOIRE en mi-temps (HT) ET en fin de match (FT) : pour chaque équipe, donne le nombre de buts HT attendu (valeur la plus probable + fourchette) puis le total FT attendu, avec la ligne Over/Under par équipe en HT (0.5, 1.5)
 12. **Combinés recommandés** (1 combiné prudent max, 2-3 sélections maximum)
+
 
 Pour chaque marché, indique un niveau de confiance : Sécurisé / Modéré / Risqué.
 Termine par une section **Plan de mise** : marchés à privilégier, mise suggérée en % du bankroll (jamais plus de 3-5% sur un pari sécurisé, 1-2% sur un pari modéré, mise symbolique sur un pari risqué).
