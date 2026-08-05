@@ -43,9 +43,23 @@ Couvre tous les marchés courants d'un bookmaker :
 11. **Nombre de buts par équipe** — OBLIGATOIRE en mi-temps (HT) ET en fin de match (FT) : pour chaque équipe, donne le nombre de buts HT attendu (valeur la plus probable + fourchette) puis le total FT attendu, avec la ligne Over/Under par équipe en HT (0.5, 1.5)
 12. **Combinés recommandés** (1 combiné prudent max, 2-3 sélections maximum)
 
+### SECTION OBLIGATOIRE : ⏱️ MI-TEMPS (HT) EN DÉTAIL
+
+Consacre une section dédiée à la 1ère mi-temps, avec un niveau de confiance sur CHAQUE ligne :
+- **BTTS mi-temps** (Oui / Non) + probabilité estimée
+- **Total buts HT — Over/Under 0.5**
+- **Total buts HT — Over/Under 1.5**
+- **Total buts HT — Over/Under 2.5**
+- **1X2 mi-temps** et **double chance mi-temps**
+- **Buts HT par équipe** (valeur la plus probable + fourchette, Over/Under 0.5 et 1.5 par équipe)
+- **Pair / Impair HT** et **score exact HT** (2 scénarios classés, jamais présentés comme certains)
+- Une ligne de synthèse : le pari HT le plus sûr et celui à éviter
+
+Rappelle que les marchés HT sont mécaniquement plus volatils que les marchés FT : classe rarement une ligne HT en « Sécurisé », et uniquement quand les moyennes de buts le justifient nettement.
 
 Pour chaque marché, indique un niveau de confiance : Sécurisé / Modéré / Risqué.
-Termine par une section **Plan de mise** : marchés à privilégier, mise suggérée en % du bankroll (jamais plus de 3-5% sur un pari sécurisé, 1-2% sur un pari modéré, mise symbolique sur un pari risqué).
+Termine par une section **Plan de mise** : marchés à privilégier, mise suggérée en % du bankroll (jamais plus de 3-5% sur un pari sécurisé, 1-2% sur un pari modéré, mise symbolique sur un pari risqué). Pour les paris HT, plafonne la mise suggérée à celle d'un pari modéré.
+
 
 ## RÈGLES DE PRUDENCE (BANKROLL)
 
