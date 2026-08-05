@@ -2,7 +2,7 @@ import { createFileRoute, Link, Outlet, useNavigate, useParams } from "@tanstack
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
-import { Plus, LogOut, History } from "lucide-react";
+import { Plus, LogOut, History, Sparkles } from "lucide-react";
 import { listAnalyses } from "@/lib/analyses.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -112,11 +112,19 @@ function AnalysesLayout() {
             </Sheet>
 
             <Link
+              to="/analyses/resume"
+              className="inline-flex items-center gap-1.5 rounded-md border border-gold/40 px-3 py-2 font-display text-xs font-semibold text-gold transition-colors hover:bg-gold/10"
+            >
+              <Sparkles className="size-3.5" aria-hidden /> Résumé VIP
+            </Link>
+
+            <Link
               to="/analyses"
               className="inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-2 font-display text-xs font-semibold text-primary-foreground transition-opacity hover:opacity-90"
             >
               <Plus className="size-3.5" aria-hidden /> Nouvelle analyse
             </Link>
+
 
             <button
               onClick={signOut}
