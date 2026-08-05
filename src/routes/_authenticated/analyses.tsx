@@ -112,11 +112,19 @@ function AnalysesLayout() {
             </Sheet>
 
             <Link
+              to="/analyses/resume"
+              className="inline-flex items-center gap-1.5 rounded-md border border-gold/40 px-3 py-2 font-display text-xs font-semibold text-gold transition-colors hover:bg-gold/10"
+            >
+              <Sparkles className="size-3.5" aria-hidden /> Résumé VIP
+            </Link>
+
+            <Link
               to="/analyses"
               className="inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-2 font-display text-xs font-semibold text-primary-foreground transition-opacity hover:opacity-90"
             >
               <Plus className="size-3.5" aria-hidden /> Nouvelle analyse
             </Link>
+
 
             <button
               onClick={signOut}
