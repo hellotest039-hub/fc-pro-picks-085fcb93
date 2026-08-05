@@ -89,6 +89,32 @@ export const createAnalysis = createServerFn({ method: "POST" })
     return { id: row.id };
   });
 
+export const buildDailyDigest = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: unknown) =>
+    z.object({ days: z.number().int().min(1).max(7).default(1) }).parse(data ?? {}),
+  )
+  .handler(async ({ data, context }) => {
+    const { generateDailyDigest } = await import("./daily-digest.server");
+    const since = new Date(Date.now() - data.days * 24 * 60 * 60 * 1000).toISOString();
+
+    const { data: rows, error } = await context.supabase
+      .from("analyses")
+      .select("competition, home_team, away_team, created_at, report")
+      .gte("created_at", since)
+      .not("report", "is", null)
+      .order("created_at", { ascending: false })
+      .limit(15);
+
+    if (error) throw new Error(error.message);
+    if (!rows || rows.length === 0) {
+      throw new Error("Aucune analyse récente à résumer. Lance d'abord une analyse.");
+    }
+
+    const digest = await generateDailyDigest(rows);
+    return { digest, count: rows.length };
+  });
+
 export const deleteAnalysis = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: { id: string }) => z.object({ id: z.string().uuid() }).parse(data))
