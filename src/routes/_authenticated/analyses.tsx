@@ -2,9 +2,10 @@ import { createFileRoute, Link, Outlet, useNavigate, useParams } from "@tanstack
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
-import { Plus, LogOut, History, Sparkles } from "lucide-react";
+import { Plus, LogOut, History, Sparkles, ShieldCheck } from "lucide-react";
 import { listAnalyses } from "@/lib/analyses.functions";
 import { supabase } from "@/integrations/supabase/client";
+import { AccessGate, useAccessStatus } from "@/components/access-gate";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
 export const Route = createFileRoute("/_authenticated/analyses")({
@@ -32,6 +33,7 @@ function AnalysesLayout() {
   const navigate = useNavigate();
   const params = useParams({ strict: false }) as { analysisId?: string };
   const [open, setOpen] = useState(false);
+  const { data: access } = useAccessStatus();
 
   const { data: analyses = [] } = useQuery({
     queryKey: ["analyses"],
@@ -111,6 +113,15 @@ function AnalysesLayout() {
               </SheetContent>
             </Sheet>
 
+            {access?.isAdmin && (
+              <Link
+                to="/analyses/admin"
+                className="inline-flex items-center gap-1.5 rounded-md border border-primary/50 px-3 py-2 font-display text-xs font-semibold text-primary transition-colors hover:bg-primary/10"
+              >
+                <ShieldCheck className="size-3.5" aria-hidden /> Admin
+              </Link>
+            )}
+
             <Link
               to="/analyses/resume"
               className="inline-flex items-center gap-1.5 rounded-md border border-gold/40 px-3 py-2 font-display text-xs font-semibold text-gold transition-colors hover:bg-gold/10"
@@ -137,7 +148,9 @@ function AnalysesLayout() {
       </header>
 
       <main className="mx-auto min-w-0 max-w-4xl px-4 py-6">
-        <Outlet />
+        <AccessGate>
+          <Outlet />
+        </AccessGate>
       </main>
     </div>
   );

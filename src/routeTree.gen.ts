@@ -15,6 +15,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedAnalysesRouteImport } from './routes/_authenticated/analyses'
 import { Route as AuthenticatedAnalysesIndexRouteImport } from './routes/_authenticated/analyses.index'
 import { Route as AuthenticatedAnalysesAnalysisIdRouteImport } from './routes/_authenticated/analyses.$analysisId'
+import { Route as AuthenticatedAnalysesAdminRouteImport } from './routes/_authenticated/analyses.admin'
 import { Route as AuthenticatedAnalysesResumeRouteImport } from './routes/_authenticated/analyses.resume'
 
 const IndexRoute = IndexRouteImport.update({
@@ -48,6 +49,12 @@ const AuthenticatedAnalysesAnalysisIdRoute =
     path: '/$analysisId',
     getParentRoute: () => AuthenticatedAnalysesRoute,
   } as any)
+const AuthenticatedAnalysesAdminRoute =
+  AuthenticatedAnalysesAdminRouteImport.update({
+    id: '/admin',
+    path: '/admin',
+    getParentRoute: () => AuthenticatedAnalysesRoute,
+  } as any)
 const AuthenticatedAnalysesResumeRoute =
   AuthenticatedAnalysesResumeRouteImport.update({
     id: '/resume',
@@ -60,6 +67,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/analyses': typeof AuthenticatedAnalysesRouteWithChildren
   '/analyses/$analysisId': typeof AuthenticatedAnalysesAnalysisIdRoute
+  '/analyses/admin': typeof AuthenticatedAnalysesAdminRoute
   '/analyses/resume': typeof AuthenticatedAnalysesResumeRoute
   '/analyses/': typeof AuthenticatedAnalysesIndexRoute
 }
@@ -67,6 +75,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/analyses/$analysisId': typeof AuthenticatedAnalysesAnalysisIdRoute
+  '/analyses/admin': typeof AuthenticatedAnalysesAdminRoute
   '/analyses/resume': typeof AuthenticatedAnalysesResumeRoute
   '/analyses': typeof AuthenticatedAnalysesIndexRoute
 }
@@ -77,6 +86,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/_authenticated/analyses': typeof AuthenticatedAnalysesRouteWithChildren
   '/_authenticated/analyses/$analysisId': typeof AuthenticatedAnalysesAnalysisIdRoute
+  '/_authenticated/analyses/admin': typeof AuthenticatedAnalysesAdminRoute
   '/_authenticated/analyses/resume': typeof AuthenticatedAnalysesResumeRoute
   '/_authenticated/analyses/': typeof AuthenticatedAnalysesIndexRoute
 }
@@ -87,10 +97,17 @@ export interface FileRouteTypes {
     | '/auth'
     | '/analyses'
     | '/analyses/$analysisId'
+    | '/analyses/admin'
     | '/analyses/resume'
     | '/analyses/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/analyses/$analysisId' | '/analyses/resume' | '/analyses'
+  to:
+    | '/'
+    | '/auth'
+    | '/analyses/$analysisId'
+    | '/analyses/admin'
+    | '/analyses/resume'
+    | '/analyses'
   id:
     | '__root__'
     | '/'
@@ -98,6 +115,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/_authenticated/analyses'
     | '/_authenticated/analyses/$analysisId'
+    | '/_authenticated/analyses/admin'
     | '/_authenticated/analyses/resume'
     | '/_authenticated/analyses/'
   fileRoutesById: FileRoutesById
@@ -152,6 +170,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAnalysesAnalysisIdRouteImport
       parentRoute: typeof AuthenticatedAnalysesRoute
     }
+    '/_authenticated/analyses/admin': {
+      id: '/_authenticated/analyses/admin'
+      path: '/admin'
+      fullPath: '/analyses/admin'
+      preLoaderRoute: typeof AuthenticatedAnalysesAdminRouteImport
+      parentRoute: typeof AuthenticatedAnalysesRoute
+    }
     '/_authenticated/analyses/resume': {
       id: '/_authenticated/analyses/resume'
       path: '/resume'
@@ -164,12 +189,14 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedAnalysesRouteChildren {
   AuthenticatedAnalysesAnalysisIdRoute: typeof AuthenticatedAnalysesAnalysisIdRoute
+  AuthenticatedAnalysesAdminRoute: typeof AuthenticatedAnalysesAdminRoute
   AuthenticatedAnalysesResumeRoute: typeof AuthenticatedAnalysesResumeRoute
   AuthenticatedAnalysesIndexRoute: typeof AuthenticatedAnalysesIndexRoute
 }
 
 const AuthenticatedAnalysesRouteChildren: AuthenticatedAnalysesRouteChildren = {
   AuthenticatedAnalysesAnalysisIdRoute: AuthenticatedAnalysesAnalysisIdRoute,
+  AuthenticatedAnalysesAdminRoute: AuthenticatedAnalysesAdminRoute,
   AuthenticatedAnalysesResumeRoute: AuthenticatedAnalysesResumeRoute,
   AuthenticatedAnalysesIndexRoute: AuthenticatedAnalysesIndexRoute,
 }
