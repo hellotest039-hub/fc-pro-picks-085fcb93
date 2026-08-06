@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-const ADMIN_EMAIL = "christusdigizone@gmail.com";
+const ADMIN_EMAIL = "copargo33@gmail.com";
 
 export const getAccessStatus = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
