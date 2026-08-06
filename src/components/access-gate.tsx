@@ -46,7 +46,7 @@ export function AccessGate({ children }: { children: ReactNode }) {
       <p className="mt-2 text-sm text-muted-foreground">
         Ton compte <span className="text-foreground">{data?.email}</span> est bien confirmé, mais
         l'accès au bot est réservé aux membres validés. L'administrateur
-        (christusdigizone@gmail.com) doit te fournir une clé d'accès unique.
+        (copargo33@gmail.com) doit te fournir une clé d'accès unique.
       </p>
 
       <form
