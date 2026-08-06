@@ -53,7 +53,9 @@ function AuthPage() {
           options: { emailRedirectTo: `${window.location.origin}/analyses` },
         });
         if (error) throw error;
-        toast.success("Compte créé. Vérifie ta boîte mail si une confirmation est demandée.");
+        toast.success(
+          "Compte créé. Confirme ton e-mail, puis demande ta clé d'accès à l'administrateur.",
+        );
       } else {
         const { error } = await supabase.auth.signInWithPassword({
           email: parsed.data.email,
