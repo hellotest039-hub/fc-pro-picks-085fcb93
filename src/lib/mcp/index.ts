@@ -21,5 +21,5 @@ export default defineMcp({
     listAnalysesTool,
     getAnalysisTool,
     recordResultTool,
-  ] as Parameters<typeof defineMcp>[0]["tools"],
+  ] as unknown as Parameters<typeof defineMcp>[0]["tools"],
 });
