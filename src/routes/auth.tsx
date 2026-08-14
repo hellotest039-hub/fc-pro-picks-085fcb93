@@ -36,6 +36,11 @@ const credentialsSchema = z.object({
 
 function AuthPage() {
   const navigate = useNavigate();
+  const { next } = Route.useSearch();
+  const goNext = () => {
+    if (next) window.location.href = next;
+    else navigate({ to: "/analyses" });
+  };
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -55,7 +60,9 @@ function AuthPage() {
         const { error } = await supabase.auth.signUp({
           email: parsed.data.email,
           password: parsed.data.password,
-          options: { emailRedirectTo: `${window.location.origin}/analyses` },
+          options: {
+            emailRedirectTo: `${window.location.origin}${next || "/analyses"}`,
+          },
         });
         if (error) throw error;
         toast.success(
@@ -69,7 +76,7 @@ function AuthPage() {
         if (error) throw error;
       }
       const { data } = await supabase.auth.getSession();
-      if (data.session) navigate({ to: "/analyses" });
+      if (data.session) goNext();
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Connexion impossible");
     } finally {
@@ -80,7 +87,7 @@ function AuthPage() {
   async function handleGoogle() {
     setLoading(true);
     const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
+      redirect_uri: `${window.location.origin}${next || "/analyses"}`,
     });
     if (result.error) {
       setLoading(false);
@@ -88,7 +95,7 @@ function AuthPage() {
       return;
     }
     if (result.redirected) return;
-    navigate({ to: "/analyses" });
+    goNext();
   }
 
   return (
