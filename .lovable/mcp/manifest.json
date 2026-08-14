@@ -1,0 +1,143 @@
+{
+  "version": 1,
+  "sdk_version": "0.26.2",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://kqxzstncjupebxhgnlhf.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "fifa-predictor-pro",
+      "version": "0.1.0",
+      "title": "FIFA Predictor Pro"
+    },
+    "tools": [
+      {
+        "name": "list_competitions",
+        "title": "Lister les compétitions",
+        "description": "Liste les compétitions FIFA/FC virtuelles couvertes par le prédicteur.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_analyses",
+        "title": "Lister les analyses",
+        "description": "Liste les analyses de matchs FIFA/FC virtuels du compte connecté (compétition, équipes, date, résultat réel si renseigné).",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "limit": {
+              "description": "Nombre maximum d'analyses (défaut 20).",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            },
+            "competition": {
+              "description": "Filtre exact sur le nom de la compétition.",
+              "type": "string"
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_analysis",
+        "title": "Lire une analyse",
+        "description": "Renvoie le rapport complet d'une analyse (tous les marchés, niveaux de confiance, plan de mise) et son résultat réel s'il est renseigné.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Identifiant UUID de l'analyse."
+            }
+          },
+          "required": [
+            "id"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "record_result",
+        "title": "Enregistrer le résultat réel",
+        "description": "Enregistre le score réel (mi-temps et fin de match) d'une analyse, afin de calibrer les prochaines prédictions de la même compétition.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Identifiant UUID de l'analyse."
+            },
+            "homeGoals": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991,
+              "description": "Buts marqués par l'équipe à domicile en fin de match."
+            },
+            "awayGoals": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991,
+              "description": "Buts marqués par l'équipe à l'extérieur en fin de match."
+            },
+            "htHomeGoals": {
+              "description": "Buts à domicile à la mi-temps.",
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "htAwayGoals": {
+              "description": "Buts à l'extérieur à la mi-temps.",
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "notes": {
+              "description": "Observations qualitatives sur le déroulé du match.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "homeGoals",
+            "awayGoals"
+          ]
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
