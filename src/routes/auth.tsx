@@ -66,8 +66,14 @@ function AuthPage() {
         });
         if (error) throw error;
         toast.success(
-          "Compte créé. Confirme ton e-mail, puis demande ta clé d'accès à l'administrateur.",
+          "Compte créé et confirmé automatiquement. Demande ta clé d'accès à l'administrateur.",
         );
+        if (mode === "signup") {
+          await supabase.auth.signInWithPassword({
+            email: parsed.data.email,
+            password: parsed.data.password,
+          });
+        }
       } else {
         const { error } = await supabase.auth.signInWithPassword({
           email: parsed.data.email,

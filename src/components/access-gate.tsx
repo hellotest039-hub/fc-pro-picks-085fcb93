@@ -44,7 +44,7 @@ export function AccessGate({ children }: { children: ReactNode }) {
         <KeyRound className="size-5 text-primary" aria-hidden /> Clé d'accès requise
       </h1>
       <p className="mt-2 text-sm text-muted-foreground">
-        Ton compte <span className="text-foreground">{data?.email}</span> est bien confirmé, mais
+        Ton compte <span className="text-foreground">{data?.email}</span> est actif, mais
         l'accès au bot est réservé aux membres validés. L'administrateur
         (copargo33@gmail.com) doit te fournir une clé d'accès unique.
       </p>
