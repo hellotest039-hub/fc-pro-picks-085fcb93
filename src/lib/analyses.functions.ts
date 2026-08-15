@@ -25,6 +25,7 @@ const resultSchema = z.object({
 
 export const listAnalyses = createServerFn({ method: "GET" })
   .handler(async () => {
+    const { supabaseAdmin: db } = await import("@/integrations/supabase/client.server");
     const { data, error } = await db
       .from("analyses")
       .select(
@@ -39,6 +40,7 @@ export const listAnalyses = createServerFn({ method: "GET" })
 export const getAnalysis = createServerFn({ method: "GET" })
   .inputValidator((data: { id: string }) => z.object({ id: z.string().uuid() }).parse(data))
   .handler(async ({ data }) => {
+    const { supabaseAdmin: db } = await import("@/integrations/supabase/client.server");
     const { data: row, error } = await db
       .from("analyses")
       .select("*")
@@ -52,6 +54,7 @@ export const getAnalysis = createServerFn({ method: "GET" })
 export const createAnalysis = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => inputSchema.parse(data))
   .handler(async ({ data }) => {
+    const { supabaseAdmin: db } = await import("@/integrations/supabase/client.server");
     const { generateReport } = await import("./prediction.server");
 
     const { data: settled } = await db
@@ -89,6 +92,7 @@ export const buildDailyDigest = createServerFn({ method: "POST" })
     z.object({ days: z.number().int().min(1).max(7).default(1) }).parse(data ?? {}),
   )
   .handler(async ({ data }) => {
+    const { supabaseAdmin: db } = await import("@/integrations/supabase/client.server");
     const { generateDailyDigest } = await import("./daily-digest.server");
     const since = new Date(Date.now() - data.days * 24 * 60 * 60 * 1000).toISOString();
 
@@ -112,6 +116,7 @@ export const buildDailyDigest = createServerFn({ method: "POST" })
 export const deleteAnalysis = createServerFn({ method: "POST" })
   .inputValidator((data: { id: string }) => z.object({ id: z.string().uuid() }).parse(data))
   .handler(async ({ data }) => {
+    const { supabaseAdmin: db } = await import("@/integrations/supabase/client.server");
     const { error } = await db.from("analyses").delete().eq("id", data.id);
     if (error) throw new Error(error.message);
     return { ok: true };
@@ -120,6 +125,7 @@ export const deleteAnalysis = createServerFn({ method: "POST" })
 export const saveAnalysisResult = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => resultSchema.parse(data))
   .handler(async ({ data }) => {
+    const { supabaseAdmin: db } = await import("@/integrations/supabase/client.server");
     const hasScore = data.actualHomeGoals !== null && data.actualAwayGoals !== null;
     const { error } = await db
       .from("analyses")
