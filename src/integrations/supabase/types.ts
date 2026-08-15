@@ -67,7 +67,7 @@ export type Database = {
           result_recorded_at: string | null
           status: string
           updated_at: string
-          user_id: string
+          user_id: string | null
         }
         Insert: {
           actual_away_goals?: number | null
@@ -85,7 +85,7 @@ export type Database = {
           result_recorded_at?: string | null
           status?: string
           updated_at?: string
-          user_id: string
+          user_id?: string | null
         }
         Update: {
           actual_away_goals?: number | null
@@ -103,7 +103,7 @@ export type Database = {
           result_recorded_at?: string | null
           status?: string
           updated_at?: string
-          user_id?: string
+          user_id?: string | null
         }
         Relationships: []
       }

@@ -1,14 +1,12 @@
-import { createFileRoute, Link, Outlet, useNavigate, useParams } from "@tanstack/react-router";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { createFileRoute, Link, Outlet, useParams } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
-import { Plus, LogOut, History, Sparkles, ShieldCheck } from "lucide-react";
+import { Plus, History, Sparkles } from "lucide-react";
 import { listAnalyses } from "@/lib/analyses.functions";
-import { supabase } from "@/integrations/supabase/client";
-import { AccessGate, useAccessStatus } from "@/components/access-gate";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
-export const Route = createFileRoute("/_authenticated/analyses")({
+export const Route = createFileRoute("/analyses")({
   head: () => ({
     meta: [
       { title: "Mes analyses — FIFA Virtual Predictor Pro" },
@@ -29,23 +27,14 @@ export const Route = createFileRoute("/_authenticated/analyses")({
 
 function AnalysesLayout() {
   const fetchAnalyses = useServerFn(listAnalyses);
-  const queryClient = useQueryClient();
-  const navigate = useNavigate();
   const params = useParams({ strict: false }) as { analysisId?: string };
   const [open, setOpen] = useState(false);
-  const { data: access } = useAccessStatus();
 
   const { data: analyses = [] } = useQuery({
     queryKey: ["analyses"],
     queryFn: () => fetchAnalyses(),
   });
 
-  async function signOut() {
-    await queryClient.cancelQueries();
-    queryClient.clear();
-    await supabase.auth.signOut();
-    navigate({ to: "/auth", replace: true });
-  }
 
   return (
     <div className="surface-pitch min-h-screen">
@@ -113,14 +102,6 @@ function AnalysesLayout() {
               </SheetContent>
             </Sheet>
 
-            {access?.isAdmin && (
-              <Link
-                to="/analyses/admin"
-                className="inline-flex items-center gap-1.5 rounded-md border border-primary/50 px-3 py-2 font-display text-xs font-semibold text-primary transition-colors hover:bg-primary/10"
-              >
-                <ShieldCheck className="size-3.5" aria-hidden /> Admin
-              </Link>
-            )}
 
             <Link
               to="/analyses/resume"
@@ -137,20 +118,12 @@ function AnalysesLayout() {
             </Link>
 
 
-            <button
-              onClick={signOut}
-              className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
-            >
-              <LogOut className="size-3.5" aria-hidden /> Quitter
-            </button>
           </div>
         </div>
       </header>
 
       <main className="mx-auto min-w-0 max-w-4xl px-4 py-6">
-        <AccessGate>
-          <Outlet />
-        </AccessGate>
+        <Outlet />
       </main>
     </div>
   );

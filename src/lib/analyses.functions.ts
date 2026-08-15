@@ -1,6 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 const inputSchema = z.object({
   competition: z.string().trim().min(1).max(120),
@@ -25,9 +24,9 @@ const resultSchema = z.object({
 });
 
 export const listAnalyses = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
-  .handler(async ({ context }) => {
-    const { data, error } = await context.supabase
+  .handler(async () => {
+    const { supabaseAdmin: db } = await import("@/integrations/supabase/client.server");
+    const { data, error } = await db
       .from("analyses")
       .select(
         "id, competition, home_team, away_team, created_at, actual_home_goals, actual_away_goals, result_recorded_at",
@@ -39,10 +38,10 @@ export const listAnalyses = createServerFn({ method: "GET" })
 
 
 export const getAnalysis = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
   .inputValidator((data: { id: string }) => z.object({ id: z.string().uuid() }).parse(data))
-  .handler(async ({ data, context }) => {
-    const { data: row, error } = await context.supabase
+  .handler(async ({ data }) => {
+    const { supabaseAdmin: db } = await import("@/integrations/supabase/client.server");
+    const { data: row, error } = await db
       .from("analyses")
       .select("*")
       .eq("id", data.id)
@@ -53,12 +52,12 @@ export const getAnalysis = createServerFn({ method: "GET" })
   });
 
 export const createAnalysis = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
   .inputValidator((data: unknown) => inputSchema.parse(data))
-  .handler(async ({ data, context }) => {
+  .handler(async ({ data }) => {
+    const { supabaseAdmin: db } = await import("@/integrations/supabase/client.server");
     const { generateReport } = await import("./prediction.server");
 
-    const { data: settled } = await context.supabase
+    const { data: settled } = await db
       .from("analyses")
       .select(
         "competition, home_team, away_team, input, actual_ht_home_goals, actual_ht_away_goals, actual_home_goals, actual_away_goals, result_notes",
@@ -71,10 +70,9 @@ export const createAnalysis = createServerFn({ method: "POST" })
     const report = await generateReport(data, settled ?? []);
 
 
-    const { data: row, error } = await context.supabase
+    const { data: row, error } = await db
       .from("analyses")
       .insert({
-        user_id: context.userId,
         competition: data.competition,
         home_team: data.homeTeam,
         away_team: data.awayTeam,
@@ -90,15 +88,15 @@ export const createAnalysis = createServerFn({ method: "POST" })
   });
 
 export const buildDailyDigest = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
   .inputValidator((data: unknown) =>
     z.object({ days: z.number().int().min(1).max(7).default(1) }).parse(data ?? {}),
   )
-  .handler(async ({ data, context }) => {
+  .handler(async ({ data }) => {
+    const { supabaseAdmin: db } = await import("@/integrations/supabase/client.server");
     const { generateDailyDigest } = await import("./daily-digest.server");
     const since = new Date(Date.now() - data.days * 24 * 60 * 60 * 1000).toISOString();
 
-    const { data: rows, error } = await context.supabase
+    const { data: rows, error } = await db
       .from("analyses")
       .select("competition, home_team, away_team, created_at, report")
       .gte("created_at", since)
@@ -116,20 +114,20 @@ export const buildDailyDigest = createServerFn({ method: "POST" })
   });
 
 export const deleteAnalysis = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
   .inputValidator((data: { id: string }) => z.object({ id: z.string().uuid() }).parse(data))
-  .handler(async ({ data, context }) => {
-    const { error } = await context.supabase.from("analyses").delete().eq("id", data.id);
+  .handler(async ({ data }) => {
+    const { supabaseAdmin: db } = await import("@/integrations/supabase/client.server");
+    const { error } = await db.from("analyses").delete().eq("id", data.id);
     if (error) throw new Error(error.message);
     return { ok: true };
   });
 
 export const saveAnalysisResult = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
   .inputValidator((data: unknown) => resultSchema.parse(data))
-  .handler(async ({ data, context }) => {
+  .handler(async ({ data }) => {
+    const { supabaseAdmin: db } = await import("@/integrations/supabase/client.server");
     const hasScore = data.actualHomeGoals !== null && data.actualAwayGoals !== null;
-    const { error } = await context.supabase
+    const { error } = await db
       .from("analyses")
       .update({
         actual_ht_home_goals: data.actualHtHomeGoals,
