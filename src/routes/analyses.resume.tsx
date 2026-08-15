@@ -7,7 +7,7 @@ import { Copy, Sparkles } from "lucide-react";
 import { ReportView } from "@/components/report-view";
 import { buildDailyDigest } from "@/lib/analyses.functions";
 
-export const Route = createFileRoute("/_authenticated/analyses/resume")({
+export const Route = createFileRoute("/analyses/resume")({
   head: () => ({
     meta: [
       { title: "Résumé VIP du jour — FIFA Virtual Predictor Pro" },

@@ -8,7 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { AccessGate, useAccessStatus } from "@/components/access-gate";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
-export const Route = createFileRoute("/_authenticated/analyses")({
+export const Route = createFileRoute("/analyses")({
   head: () => ({
     meta: [
       { title: "Mes analyses — FIFA Virtual Predictor Pro" },

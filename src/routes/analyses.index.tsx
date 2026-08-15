@@ -6,7 +6,7 @@ import { AnalysisForm } from "@/components/analysis-form";
 import { createAnalysis } from "@/lib/analyses.functions";
 import type { AnalysisInput } from "@/lib/competitions";
 
-export const Route = createFileRoute("/_authenticated/analyses/")({
+export const Route = createFileRoute("/analyses/")({
   component: NewAnalysis,
 });
 

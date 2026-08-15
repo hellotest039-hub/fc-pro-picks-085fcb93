@@ -10,26 +10,25 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AnalysesRouteImport } from './routes/analyses'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
-import { Route as AuthenticatedAnalysesRouteImport } from './routes/_authenticated/analyses'
+import { Route as AnalysesIndexRouteImport } from './routes/analyses.index'
+import { Route as AnalysesAnalysisIdRouteImport } from './routes/analyses.$analysisId'
+import { Route as AnalysesResumeRouteImport } from './routes/analyses.resume'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
-import { Route as AuthenticatedAnalysesIndexRouteImport } from './routes/_authenticated/analyses.index'
-import { Route as AuthenticatedAnalysesAnalysisIdRouteImport } from './routes/_authenticated/analyses.$analysisId'
-import { Route as AuthenticatedAnalysesAdminRouteImport } from './routes/_authenticated/analyses.admin'
-import { Route as AuthenticatedAnalysesResumeRouteImport } from './routes/_authenticated/analyses.resume'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
-  id: '/_authenticated',
+const AnalysesRoute = AnalysesRouteImport.update({
+  id: '/analyses',
+  path: '/analyses',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -54,10 +53,20 @@ const Char91DotwellKnownChar93OauthProtectedResourceRoute =
     path: '/.well-known/oauth-protected-resource',
     getParentRoute: () => rootRouteImport,
   } as any)
-const AuthenticatedAnalysesRoute = AuthenticatedAnalysesRouteImport.update({
-  id: '/analyses',
-  path: '/analyses',
-  getParentRoute: () => AuthenticatedRouteRoute,
+const AnalysesIndexRoute = AnalysesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AnalysesRoute,
+} as any)
+const AnalysesAnalysisIdRoute = AnalysesAnalysisIdRouteImport.update({
+  id: '/$analysisId',
+  path: '/$analysisId',
+  getParentRoute: () => AnalysesRoute,
+} as any)
+const AnalysesResumeRoute = AnalysesResumeRouteImport.update({
+  id: '/resume',
+  path: '/resume',
+  getParentRoute: () => AnalysesRoute,
 } as any)
 const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
   id: '/.lovable/oauth/consent',
@@ -70,44 +79,19 @@ const Char91DotmcpChar93InvokeToolToolRoute =
     path: '/.mcp/invoke-tool/$tool',
     getParentRoute: () => rootRouteImport,
   } as any)
-const AuthenticatedAnalysesIndexRoute =
-  AuthenticatedAnalysesIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => AuthenticatedAnalysesRoute,
-  } as any)
-const AuthenticatedAnalysesAnalysisIdRoute =
-  AuthenticatedAnalysesAnalysisIdRouteImport.update({
-    id: '/$analysisId',
-    path: '/$analysisId',
-    getParentRoute: () => AuthenticatedAnalysesRoute,
-  } as any)
-const AuthenticatedAnalysesAdminRoute =
-  AuthenticatedAnalysesAdminRouteImport.update({
-    id: '/admin',
-    path: '/admin',
-    getParentRoute: () => AuthenticatedAnalysesRoute,
-  } as any)
-const AuthenticatedAnalysesResumeRoute =
-  AuthenticatedAnalysesResumeRouteImport.update({
-    id: '/resume',
-    path: '/resume',
-    getParentRoute: () => AuthenticatedAnalysesRoute,
-  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/analyses': typeof AnalysesRouteWithChildren
   '/auth': typeof AuthRoute
   '/mcp': typeof McpRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
-  '/analyses': typeof AuthenticatedAnalysesRouteWithChildren
+  '/analyses/$analysisId': typeof AnalysesAnalysisIdRoute
+  '/analyses/resume': typeof AnalysesResumeRoute
+  '/analyses/': typeof AnalysesIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
-  '/analyses/$analysisId': typeof AuthenticatedAnalysesAnalysisIdRoute
-  '/analyses/admin': typeof AuthenticatedAnalysesAdminRoute
-  '/analyses/resume': typeof AuthenticatedAnalysesResumeRoute
-  '/analyses/': typeof AuthenticatedAnalysesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -115,44 +99,40 @@ export interface FileRoutesByTo {
   '/mcp': typeof McpRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/analyses/$analysisId': typeof AnalysesAnalysisIdRoute
+  '/analyses/resume': typeof AnalysesResumeRoute
+  '/analyses': typeof AnalysesIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
-  '/analyses/$analysisId': typeof AuthenticatedAnalysesAnalysisIdRoute
-  '/analyses/admin': typeof AuthenticatedAnalysesAdminRoute
-  '/analyses/resume': typeof AuthenticatedAnalysesResumeRoute
-  '/analyses': typeof AuthenticatedAnalysesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/analyses': typeof AnalysesRouteWithChildren
   '/auth': typeof AuthRoute
   '/mcp': typeof McpRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
-  '/_authenticated/analyses': typeof AuthenticatedAnalysesRouteWithChildren
+  '/analyses/$analysisId': typeof AnalysesAnalysisIdRoute
+  '/analyses/resume': typeof AnalysesResumeRoute
+  '/analyses/': typeof AnalysesIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
-  '/_authenticated/analyses/$analysisId': typeof AuthenticatedAnalysesAnalysisIdRoute
-  '/_authenticated/analyses/admin': typeof AuthenticatedAnalysesAdminRoute
-  '/_authenticated/analyses/resume': typeof AuthenticatedAnalysesResumeRoute
-  '/_authenticated/analyses/': typeof AuthenticatedAnalysesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/analyses'
     | '/auth'
     | '/mcp'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
-    | '/analyses'
-    | '/.lovable/oauth/consent'
-    | '/.mcp/invoke-tool/$tool'
     | '/analyses/$analysisId'
-    | '/analyses/admin'
     | '/analyses/resume'
     | '/analyses/'
+    | '/.lovable/oauth/consent'
+    | '/.mcp/invoke-tool/$tool'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -160,32 +140,29 @@ export interface FileRouteTypes {
     | '/mcp'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
-    | '/.lovable/oauth/consent'
-    | '/.mcp/invoke-tool/$tool'
     | '/analyses/$analysisId'
-    | '/analyses/admin'
     | '/analyses/resume'
     | '/analyses'
+    | '/.lovable/oauth/consent'
+    | '/.mcp/invoke-tool/$tool'
   id:
     | '__root__'
     | '/'
-    | '/_authenticated'
+    | '/analyses'
     | '/auth'
     | '/mcp'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
-    | '/_authenticated/analyses'
+    | '/analyses/$analysisId'
+    | '/analyses/resume'
+    | '/analyses/'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
-    | '/_authenticated/analyses/$analysisId'
-    | '/_authenticated/analyses/admin'
-    | '/_authenticated/analyses/resume'
-    | '/_authenticated/analyses/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AnalysesRoute: typeof AnalysesRouteWithChildren
   AuthRoute: typeof AuthRoute
   McpRoute: typeof McpRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
@@ -203,11 +180,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated': {
-      id: '/_authenticated'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+    '/analyses': {
+      id: '/analyses'
+      path: '/analyses'
+      fullPath: '/analyses'
+      preLoaderRoute: typeof AnalysesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -238,12 +215,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/analyses': {
-      id: '/_authenticated/analyses'
-      path: '/analyses'
-      fullPath: '/analyses'
-      preLoaderRoute: typeof AuthenticatedAnalysesRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/analyses/': {
+      id: '/analyses/'
+      path: '/'
+      fullPath: '/analyses/'
+      preLoaderRoute: typeof AnalysesIndexRouteImport
+      parentRoute: typeof AnalysesRoute
+    }
+    '/analyses/$analysisId': {
+      id: '/analyses/$analysisId'
+      path: '/$analysisId'
+      fullPath: '/analyses/$analysisId'
+      preLoaderRoute: typeof AnalysesAnalysisIdRouteImport
+      parentRoute: typeof AnalysesRoute
+    }
+    '/analyses/resume': {
+      id: '/analyses/resume'
+      path: '/resume'
+      fullPath: '/analyses/resume'
+      preLoaderRoute: typeof AnalysesResumeRouteImport
+      parentRoute: typeof AnalysesRoute
     }
     '/.lovable/oauth/consent': {
       id: '/.lovable/oauth/consent'
@@ -259,70 +250,28 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char91DotmcpChar93InvokeToolToolRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/analyses/': {
-      id: '/_authenticated/analyses/'
-      path: '/'
-      fullPath: '/analyses/'
-      preLoaderRoute: typeof AuthenticatedAnalysesIndexRouteImport
-      parentRoute: typeof AuthenticatedAnalysesRoute
-    }
-    '/_authenticated/analyses/$analysisId': {
-      id: '/_authenticated/analyses/$analysisId'
-      path: '/$analysisId'
-      fullPath: '/analyses/$analysisId'
-      preLoaderRoute: typeof AuthenticatedAnalysesAnalysisIdRouteImport
-      parentRoute: typeof AuthenticatedAnalysesRoute
-    }
-    '/_authenticated/analyses/admin': {
-      id: '/_authenticated/analyses/admin'
-      path: '/admin'
-      fullPath: '/analyses/admin'
-      preLoaderRoute: typeof AuthenticatedAnalysesAdminRouteImport
-      parentRoute: typeof AuthenticatedAnalysesRoute
-    }
-    '/_authenticated/analyses/resume': {
-      id: '/_authenticated/analyses/resume'
-      path: '/resume'
-      fullPath: '/analyses/resume'
-      preLoaderRoute: typeof AuthenticatedAnalysesResumeRouteImport
-      parentRoute: typeof AuthenticatedAnalysesRoute
-    }
   }
 }
 
-interface AuthenticatedAnalysesRouteChildren {
-  AuthenticatedAnalysesAnalysisIdRoute: typeof AuthenticatedAnalysesAnalysisIdRoute
-  AuthenticatedAnalysesAdminRoute: typeof AuthenticatedAnalysesAdminRoute
-  AuthenticatedAnalysesResumeRoute: typeof AuthenticatedAnalysesResumeRoute
-  AuthenticatedAnalysesIndexRoute: typeof AuthenticatedAnalysesIndexRoute
+interface AnalysesRouteChildren {
+  AnalysesAnalysisIdRoute: typeof AnalysesAnalysisIdRoute
+  AnalysesResumeRoute: typeof AnalysesResumeRoute
+  AnalysesIndexRoute: typeof AnalysesIndexRoute
 }
 
-const AuthenticatedAnalysesRouteChildren: AuthenticatedAnalysesRouteChildren = {
-  AuthenticatedAnalysesAnalysisIdRoute: AuthenticatedAnalysesAnalysisIdRoute,
-  AuthenticatedAnalysesAdminRoute: AuthenticatedAnalysesAdminRoute,
-  AuthenticatedAnalysesResumeRoute: AuthenticatedAnalysesResumeRoute,
-  AuthenticatedAnalysesIndexRoute: AuthenticatedAnalysesIndexRoute,
+const AnalysesRouteChildren: AnalysesRouteChildren = {
+  AnalysesAnalysisIdRoute: AnalysesAnalysisIdRoute,
+  AnalysesResumeRoute: AnalysesResumeRoute,
+  AnalysesIndexRoute: AnalysesIndexRoute,
 }
 
-const AuthenticatedAnalysesRouteWithChildren =
-  AuthenticatedAnalysesRoute._addFileChildren(
-    AuthenticatedAnalysesRouteChildren,
-  )
-
-interface AuthenticatedRouteRouteChildren {
-  AuthenticatedAnalysesRoute: typeof AuthenticatedAnalysesRouteWithChildren
-}
-
-const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedAnalysesRoute: AuthenticatedAnalysesRouteWithChildren,
-}
-
-const AuthenticatedRouteRouteWithChildren =
-  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+const AnalysesRouteWithChildren = AnalysesRoute._addFileChildren(
+  AnalysesRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AnalysesRoute: AnalysesRouteWithChildren,
   AuthRoute: AuthRoute,
   McpRoute: McpRoute,
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,

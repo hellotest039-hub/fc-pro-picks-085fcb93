@@ -8,7 +8,7 @@ import { ResultForm } from "@/components/result-form";
 import { deleteAnalysis, getAnalysis } from "@/lib/analyses.functions";
 
 
-export const Route = createFileRoute("/_authenticated/analyses/$analysisId")({
+export const Route = createFileRoute("/analyses/$analysisId")({
   component: AnalysisDetail,
 });
 
